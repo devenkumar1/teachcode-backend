@@ -4,7 +4,11 @@ const cors = require('cors');
 const routes = require('./routes/routes');
 PORT=process.env.PORT
 
-app.use(cors());
+const allowedOrigins = ['https://teach-code-app.netlify.app'];
+
+app.use(cors({
+  origin: allowedOrigins
+}));
 app.use(express.json());
 app.use(routes);
 app.get('/', (req, res) => {
