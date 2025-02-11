@@ -1,21 +1,20 @@
-const express = require('express');
+import express from 'express'
 const router = express();
-const userController = require('../controllers/userController.js');
-require('../db/db.config.js');
-
+import {mentor,register,login,quiz,matchanswer,learningPath,code} from '../controllers/userController.js'
 
 //user
-router.post('/register', userController.register);
-router.post('/login', userController.login);
+router.post('/register',register);
+router.post('/login', login);
 
 // quiz
-router.post('/quiz', userController.quiz);
-router.post('/matchanswer', userController.matchanswer);
+router.post('/quiz', quiz);
+router.post('/matchanswer', matchanswer);
 
 // Mentor
-router.post('/mentor', userController.mentor);
+router.post('/mentor',mentor);
 
-router.post('/learningPath', userController.learningPath);
+router.post('/learningPath', learningPath);
 
-router.post('/code', userController.code);
-module.exports = router;
+router.post('/code', code);
+
+export default router;

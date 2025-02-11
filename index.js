@@ -1,19 +1,18 @@
-const express = require('express');
+import express from 'express'
 const app = express();
-const cors = require('cors');
-const routes = require('./routes/routes');
-PORT=process.env.PORT
+import cors from 'cors';
+import connectDb from './db/db.config.js';
+import Userrouters from './routes/routes.js';
+const PORT=process.env.PORT
 
-const allowedOrigins = ['https://teach-code-app.netlify.app'];
 
-app.use(cors({
-  origin: allowedOrigins
-}));
+app.use(cors());
 app.use(express.json());
-app.use(routes);
+app.use('/api',Userrouters);
 app.get('/', (req, res) => {
     res.send('Welcome to the server');
 });
 app.listen(PORT, () => {
+  connectDb();
     console.log('Server is running on port 4500');
 });
