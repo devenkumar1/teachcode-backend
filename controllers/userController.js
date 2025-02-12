@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import User from '../schema/user.js';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
@@ -42,23 +41,20 @@ export const login = async (req, res) => {
     try {
         console.log(req.body);
         const { email, password } = req.body;
-
         if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
-
-        const user = await User.findOne({ email });
+        const user = await User.findOne({email});
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-
-        const validPassword =  bcrypt.compare(password, user.password);
+        const validPassword = await  bcrypt.compare(password, user.password);
         if (!validPassword) {
+            console.log("incorrect password");
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-
         const token = jwt.sign({ _id: user._id, email: email }, process.env.JWT_SECRET, { expiresIn: '30d' });
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token, { httpOnly: true, sameSite: "Lax", secure: process.env.NODE_ENV === 'production', path: '/' }); 
        return res.status(200).json({ message: 'User logged in successfully', token });
 
     } catch (error) {

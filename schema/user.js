@@ -3,10 +3,14 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: String,
-    email: String,
+    email: {
+        type:String,
+      required: true
+    },
     password: String,
     role: {
         type: String,
+        enum: ['user', 'admin'],
         default: 'user'
     },
     createdAt: {
@@ -19,15 +23,15 @@ const userSchema = new Schema({
     },
     progress: {
         type: Schema.Types.ObjectId,
-        ref: 'Progress'
+        ref: 'progress'
     },
     courses: [{
         type: Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'course'
     }],
     achievements: [{
         type: Schema.Types.ObjectId,
-        ref: 'Achievement'
+        ref: 'achievement'
     }]
 });
 const  User = mongoose.model('User', userSchema);

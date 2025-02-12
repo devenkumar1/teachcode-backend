@@ -6,7 +6,11 @@ import Userrouters from './routes/routes.js';
 const PORT=process.env.PORT
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // replace with the actual origin of the front-end
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 app.use(express.json());
 app.use('/api',Userrouters);
 app.get('/', (req, res) => {
