@@ -39,29 +39,54 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        console.log(req.body);
-        const { email, password } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
-        const user = await User.findOne({email});
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-        const validPassword = await  bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            console.log("incorrect password");
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-        const token = jwt.sign({ _id: user._id, email: email }, process.env.JWT_SECRET, { expiresIn: '30d' });
-        res.cookie('token', token, { httpOnly: true, sameSite: "Lax", secure: process.env.NODE_ENV === 'production', path: '/' }); 
-       return res.status(200).json({ message: 'User logged in successfully', token });
-
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+  
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(400).json({ message: 'Invalid email or password' });
+      }
+      const token = jwt.sign({ _id: user._id, email: email }, process.env.JWT_SECRET, { expiresIn: '30d' });
+      
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'Lax', 
+        maxAge: 30 * 24 * 60 * 60 * 1000, //30days
+      });
+  
+      return res.status(200).json({ message: 'User logged in successfully', token });
     } catch (error) {
-        console.error('Error logging in user:', error);
-        res.status(500).json({ message: 'Internal server error' });
+      console.error('Error logging in user:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-};
+  };
+  
+  export const Logout=async(req, res) => {
+     try{
+        res.clearCookie('token', {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Lax',
+            path: '/', 
+        });
+            return res.status(200).json({message: "logout successfull"})
+
+     }catch(error){
+        console.log("error occured in user logout",error);
+        return res.status(500).json({message: "logout unsuccessfull"})
+     }
+
+  }
+      
+
 
 export const quiz = async (req, res) => {
     try {
@@ -297,3 +322,13 @@ export const code = async (req, res) => {
     }
 }
 
+
+export const getMe=async(req,res)=>{
+    try {
+        const user = req.user;
+        res.status(200).json({user:user});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};

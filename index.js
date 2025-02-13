@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDb from './db/db.config.js';
 import Userrouters from './routes/routes.js';
 const PORT=process.env.PORT
+import cookieParser from 'cookie-parser';
 
 
 app.use(cors({
@@ -12,6 +13,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api',Userrouters);
 app.get('/', (req, res) => {
     res.send('Welcome to the server');
