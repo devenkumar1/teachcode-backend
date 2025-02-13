@@ -62,7 +62,7 @@ export const login = async (req, res) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, //30days
       });
   
-      return res.status(200).json({ message: 'User logged in successfully', token });
+      return res.status(200).json({ message: 'User logged in successfully',user, token });
     } catch (error) {
       console.error('Error logging in user:', error);
       res.status(500).json({ message: 'Internal server error' });

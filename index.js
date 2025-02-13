@@ -6,13 +6,8 @@ import Userrouters from './routes/routes.js';
 const PORT=process.env.PORT
 import cookieParser from 'cookie-parser';
 
+app.use(cors({ origin: `${process.env.FRONTEND_URL}`, credentials: true }));
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true, 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api',Userrouters);
