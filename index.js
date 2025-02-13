@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 
 
 app.use(cors({
-  origin: 'http://localhost:5173', // replace with the actual origin of the front-end
+  origin: process.env.FRONTEND_URL, 
   credentials: true, 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
