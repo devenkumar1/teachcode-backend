@@ -71,14 +71,11 @@ export const login = async (req, res) => {
   
   export const Logout=async(req, res) => {
      try{
-        res.clearCookie('token', {
-            domain: process.env.FRONTEND_URL,
+        res.clearCookie('token', token, {
             httpOnly: true,
             secure: true, 
-            maxAge: 30 * 24 * 60 * 60 * 1000, //30days
             sameSite: 'Strict', 
-            path: '/', 
-        });
+          });
             return res.status(200).json({message: "logout successfull"})
 
      }catch(error){
